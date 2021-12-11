@@ -7,4 +7,4 @@ app.get('/*', (req, res) => {
     res.sendFile(__dirname + '/public/index.html')
 })
 
-app.listen(3000, () => console.log("App is listening on port 3000"))
+app.listen(5000, () => console.log("App is listening on port 5000"))

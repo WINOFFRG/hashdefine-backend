@@ -22,7 +22,7 @@ class Router {
             document.body.addEventListener("click", e => {
                 if (e.target.matches("[data-link]")) {
                     e.preventDefault();
-                    navigateTo(e.target.href);
+                    this.navigation(e.target.href);
                 }
             });
         
@@ -40,7 +40,7 @@ class Router {
         let path = window.location.pathname;
 
         //Purify Path
-        let viewPath = this.views[path] === undefined ? '404' : path;
+        let viewPath = this.views[path] === undefined ? '/404' : path;
 
         //Fetch Content if not present
         let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
@@ -54,19 +54,19 @@ class Router {
                 view: 'home',
                 title: `${this.globalTitle}`,
             },
-            'events': {
+            '/events': {
                 view: 'events',
                 title: `${this.globalTitle} - Events`,
             },
-            'team': {
+            '/team': {
                 view: 'team',
                 title: `${this.globalTitle} - Our Team`,
             },
-            'about': {
+            '/about': {
                 view: 'about',
                 title: `${this.globalTitle} - About Us`,
             },
-            '404': {
+            '/404': {
                 view: '404',
                 title: `404 - Page Not Found`,
             }
@@ -85,8 +85,11 @@ class Router {
 
     async getView(name) {
         try {
-            const page = await fetch(`/${name}.html`);
-            return page.text();
+            let page = await fetch(`/${name}.html`);
+            page = await page.text();
+            name = `/${name}`;
+            this.views[name] = page;
+            return page;
         } catch (error) {
             console.log(`${name}.html - No Such Page View Found!`);
         }
