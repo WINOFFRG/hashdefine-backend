@@ -40,7 +40,7 @@ class Router {
         let path = window.location.pathname;
 
         //Purify Path
-        let viewPath = this.views[path] === undefined ? '/404' : path;
+        let viewPath = this.views[path] === undefined ? '/error' : path;
 
         //Fetch Content if not present
         let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
@@ -66,8 +66,8 @@ class Router {
                 view: 'about',
                 title: `${this.globalTitle} - About Us`,
             },
-            '/404': {
-                view: '404',
+            '/error': {
+                view: 'error',
                 title: `404 - Page Not Found`,
             }
         };
