@@ -1,3 +1,4 @@
-# website-update
+# Hash Define Static Site Hosting
 
-## Project Skeleton [Link](https://reinvented-riddle-533.notion.site/Define-75a6c955d4784b5f998543b3fd4ac52d)
+- `vercel.json` rewrites all URLs to `/index.html` which allows the apps to handle 404 Errors from client side 😌
+- The app is able to server the purpose for a SPA without any Server and handling all test cases. ✅
