@@ -1,66 +1,96 @@
 class Router {
 
-    rootDiv = null;
-    host = null;
-    events = null;
+    routes = null;
+    globalTitle = null;
+    views = null;
+    mountPoint = 'body';
 
     constructor() {
-        this.rootDiv = document.querySelector('.master-container');
-        this.host = window.location.host;
-        
-        this.routes = {
-            '/' : '',
-            'events' : '',
-        }
 
-        this.events = this.manageEvents();
+        this.routes = this.setRoutes();
+        this.views = this.setViews();
+        this.globalTitle = 'Hash Define';
+        this.mountPoint = document.querySelector('.master-container');
+        
+        this.setEvents();
     }
 
-    manageEvents() {
-        window.onload = () => {this.render()};
-        window.onpopstate = () => {
-            this.rootDiv.innerHTML = this.routes[window.location.pathname];
+    setEvents() { 
+        window.addEventListener("popstate", this.render);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.addEventListener("click", e => {
+                if (e.target.matches("[data-link]")) {
+                    e.preventDefault();
+                    navigateTo(e.target.href);
+                }
+            });
+        
+            this.render();
+        });
+    }
+
+    navigation(url) {
+        history.pushState(null, null, url);
+        this.render();
+    }
+
+    async render() {
+
+        let path = window.location.pathname;
+
+        //Purify Path
+        let viewPath = this.views[path] === undefined ? '404' : path;
+
+        //Fetch Content if not present
+        let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
+
+        this.mountPoint.innerHTML = viewContent;
+    };
+
+    setRoutes() {
+        return {
+            '/': {
+                view: 'home',
+                title: `${this.globalTitle}`,
+            },
+            'events': {
+                view: 'events',
+                title: `${this.globalTitle} - Events`,
+            },
+            'team': {
+                view: 'team',
+                title: `${this.globalTitle} - Our Team`,
+            },
+            'about': {
+                view: 'about',
+                title: `${this.globalTitle} - About Us`,
+            },
+            '404': {
+                view: '404',
+                title: `404 - Page Not Found`,
+            }
         };
     }
+   
+    setViews() {
+        let views = {};
 
-    async render(path) {
+        Object.keys(this.routes).forEach( route => {
+            views[route] = '';
+        });
 
-        path = !path ? window.location.pathname : path;
-
-        if(path === '/') {
-            const res = await this.getPage('home');
-            this.routes[path] = res;
-        }
-        else {
-            this.routes[path] = await this.getPage(path);
-        }
-
-        this.navigation(path);
+        return views;
     }
 
-    async getPage (pathName) {
-
-        const page = `/${pathName}.html`
-
+    async getView(name) {
         try {
-            const response = await fetch(page);
-            return response.text();
+            const page = await fetch(`/${name}.html`);
+            return page.text();
         } catch (error) {
-            console.log("Load 404 Page");
+            console.log(`${name}.html - No Such Page View Found!`);
         }
     }
-
-    navigation (pathName) {
-
-        window.history.pushState(
-            {},
-            pathName,
-            `${pathName}`,
-          );
-
-        this.rootDiv.innerHTML = this.routes[pathName];
-    }
-}
+};
 
 const pageRouter = new Router();
-window.pageRouter = pageRouter;
