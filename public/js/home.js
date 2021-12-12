@@ -138,7 +138,7 @@ const mouseDownHandler = (e) => {
     document.addEventListener('mouseup', mouseUpHandler);
 };
 
-galleryWraper.addEventListener('mousedown', mouseDownHandler);
+// galleryWraper.addEventListener('mousedown', mouseDownHandler);
 
 
 // gallery
@@ -188,4 +188,4 @@ function init() {
     console.log("Home page loaded");
 };
 
-emailHandler();
+// emailHandler();

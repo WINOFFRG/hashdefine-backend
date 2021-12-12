@@ -6,13 +6,21 @@ class Router {
     mountPoint = 'body';
 
     constructor() {
+        this.mountPoint = document.querySelector('.master-container');
 
         this.routes = this.setRoutes();
         this.views = this.setViews();
         this.globalTitle = 'Hash Define';
-        this.mountPoint = document.querySelector('.master-container');
+        this.loaderElement = document.createElement('div');
+        this.loaderElement.className = 'loader';
         
         this.setEvents();
+    }
+    
+    loader(visibility) {
+        this.mountPoint.appendChild(this.loaderElement);
+
+        this.loaderElement.style.display = visibility || 'none';
     }
 
     setEvents() { 
@@ -35,7 +43,9 @@ class Router {
         this.render();
     }
 
-    async render() {
+    render = async () => {
+
+        this.loader('block');
 
         let path = window.location.pathname;
 
@@ -45,7 +55,8 @@ class Router {
         //Fetch Content if not present
         let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
 
-        this.mountPoint.innerHTML = viewContent;
+
+         this.mountPoint.innerHTML = viewContent;
     };
 
     setRoutes() {
@@ -53,6 +64,7 @@ class Router {
             '/': {
                 view: 'home',
                 title: `${this.globalTitle}`,
+                script: ['home', 'notification'],
             },
             '/events': {
                 view: 'events',
