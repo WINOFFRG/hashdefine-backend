@@ -138,7 +138,54 @@ const mouseDownHandler = (e) => {
     document.addEventListener('mouseup', mouseUpHandler);
 };
 
-// galleryWraper.addEventListener('mousedown', mouseDownHandler);
+galleryWraper.addEventListener('mousedown', mouseDownHandler);
+
+//update gallery
+const galleryColumn = document.querySelector('.gallery__flex');
+(async function() {
+
+    
+
+})();
+//update gallery
+
+//moving text gallery-content
+const eventNameWrapper = document.querySelector('.event-name');
+const eventName = document.querySelector('.event-name h2');
+
+const speakerNameWrapper = document.querySelector('.speaker-name');
+const speakerName = document.querySelector('.speaker-name p');
+
+window.addEventListener('load', () => {
+
+    const eventNameWrapperWidth = eventNameWrapper.offsetWidth;
+    const eventNameWidth = eventName.offsetWidth;
+    const eventNameMoveWidth = eventNameWrapperWidth - eventNameWidth;
+
+    const speakerNameWrapperWidth = speakerNameWrapper.offsetWidth;
+    const speakerNameWidth = speakerName.offsetWidth;
+    const speakerNameMoveWidth = speakerNameWrapperWidth - speakerNameWidth;
+     
+    console.log("h2:" , eventNameWidth);
+    console.log("h2 wrapper:", eventNameWrapperWidth);
+    console.log("h2 move:", eventNameMoveWidth);
+
+    console.log("p:", speakerNameWidth);
+    console.log("p wrapper:", speakerNameWrapperWidth);
+    console.log("p move:", speakerNameMoveWidth);
+
+    eventName.style.setProperty('--move-width', `${eventNameMoveWidth}px`);
+    eventName.style.setProperty('--move-duration', `${-(eventNameMoveWidth * 9) / 199}s`);
+
+    speakerName.style.setProperty('--move-width', `${speakerNameMoveWidth}px`);
+    speakerName.style.setProperty('--move-duration', `${-(speakerNameMoveWidth * 9) / 199}s`);
+});
+
+// for(let index = 0; index >= moveWidth; index--) {
+
+//     eventName.style.transform = `translateX(${index}px)`;
+// }
+//moving text gallery-content
 
 
 // gallery
