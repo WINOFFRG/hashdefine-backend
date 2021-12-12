@@ -45,18 +45,29 @@ class Router {
 
     render = async () => {
 
-        this.loader('block');
+        try {
+            this.mountPoint.innerHTML = "";
+            this.loader('block');
+            
+            let path = window.location.pathname;
+            
+            //Purify Path
+            let viewPath = this.views[path] === undefined ? '/error' : path;
+            
+            //Fetch Content if not present
+            let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
+            
+            this.removeScripts(this.routes[viewPath].scripts);
+            
+            document.title = this.routes[viewPath].title;
+            this.mountPoint.innerHTML = viewContent;
+    
+            this.loadScripts(this.routes[viewPath].scripts);    
 
-        let path = window.location.pathname;
-
-        //Purify Path
-        let viewPath = this.views[path] === undefined ? '/error' : path;
-
-        //Fetch Content if not present
-        let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
-
-        document.title = this.routes[viewPath].title;
-        this.mountPoint.innerHTML = viewContent;
+        } catch (error) {
+            console.log("An Error Occured while rendering the View!");
+        }
+        
     };
 
     setRoutes() {
@@ -64,23 +75,27 @@ class Router {
             '/': {
                 view: 'home',
                 title: `${this.globalTitle}`,
-                script: ['home', 'notification'],
+                scripts: ['home'],
             },
             '/events': {
                 view: 'events',
                 title: `${this.globalTitle} - Events`,
+                scripts: ['home'],
             },
             '/team': {
                 view: 'team',
                 title: `${this.globalTitle} - Our Team`,
+                scripts: [],
             },
             '/about': {
                 view: 'about',
                 title: `${this.globalTitle} - About Us`,
+                scripts: [],
             },
             '/error': {
                 view: 'error',
                 title: `404 - Page Not Found`,
+                scripts: [],
             }
         };
     }
@@ -93,6 +108,28 @@ class Router {
         });
 
         return views;
+    }
+
+    removeScripts(scripts) {
+        scripts.forEach( (script) => {
+
+            if(!document.querySelector(`[data-script=${script}]`)) return;
+            document.querySelector(`[data-script=${script}]`).remove();
+
+        })
+    }
+
+    loadScripts(scripts) {
+        scripts.forEach( (script) => {
+
+            if(document.querySelector(`[data-script=${script}]`)) return;
+
+            let scriptElement = document.createElement('script');
+            scriptElement.type = 'module';
+            scriptElement.src = `/js/${script}.js`;
+            scriptElement.setAttribute('data-script', script);
+            document.querySelector('head').appendChild(scriptElement);
+        });
     }
 
     async getView(name) {

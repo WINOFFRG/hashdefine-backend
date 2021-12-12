@@ -93,6 +93,7 @@ class NotificationManager {
 }
 
 const notificationHandler = new NotificationManager();
+window.noti = notificationHandler;
 
 // gallery
 
@@ -236,3 +237,6 @@ function init() {
 };
 
 // emailHandler();
+
+
+console.log(new Date());
