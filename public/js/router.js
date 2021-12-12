@@ -7,10 +7,10 @@ class Router {
 
     constructor() {
         this.mountPoint = document.querySelector('.master-container');
+        this.globalTitle = 'Hash Define';
 
         this.routes = this.setRoutes();
         this.views = this.setViews();
-        this.globalTitle = 'Hash Define';
         this.loaderElement = document.createElement('div');
         this.loaderElement.className = 'loader';
         
@@ -55,8 +55,8 @@ class Router {
         //Fetch Content if not present
         let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
 
-
-         this.mountPoint.innerHTML = viewContent;
+        document.title = this.routes[viewPath].title;
+        this.mountPoint.innerHTML = viewContent;
     };
 
     setRoutes() {
