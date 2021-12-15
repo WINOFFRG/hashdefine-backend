@@ -80,7 +80,7 @@ class Router {
             '/events': {
                 view: 'events',
                 title: `${this.globalTitle} - Events`,
-                scripts: ['home'],
+                scripts: [],
             },
             '/team': {
                 view: 'team',
@@ -110,13 +110,11 @@ class Router {
         return views;
     }
 
-    removeScripts(scripts) {
-        scripts.forEach( (script) => {
+    removeScripts() {
 
-            if(!document.querySelector(`[data-script=${script}]`)) return;
-            document.querySelector(`[data-script=${script}]`).remove();
-
-        })
+        document.querySelectorAll(`[data-script]`).forEach( (script) => {
+            script.remove();
+        });
     }
 
     loadScripts(scripts) {
@@ -128,7 +126,7 @@ class Router {
             scriptElement.type = 'module';
             scriptElement.src = `/js/${script}.js`;
             scriptElement.setAttribute('data-script', script);
-            document.querySelector('head').appendChild(scriptElement);
+            document.querySelector('body').appendChild(scriptElement);
         });
     }
 

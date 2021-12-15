@@ -142,45 +142,39 @@ const mouseDownHandler = (e) => {
 galleryWraper.addEventListener('mousedown', mouseDownHandler);
 
 //update gallery
-const galleryColumn = document.querySelector('.gallery__flex');
-(async function() {
+(async function updateGallery() {
+
+    // console.log("Updating Gallery");
 
     
 
 })();
 //update gallery
 
-//moving text gallery-content
-const eventNameWrapper = document.querySelector('.event-name');
-const eventName = document.querySelector('.event-name h2');
+window.addEventListener('load', infiniteScrollHandler());
 
-const speakerNameWrapper = document.querySelector('.speaker-name');
-const speakerName = document.querySelector('.speaker-name p');
+function infiniteScrollHandler() {
 
-window.addEventListener('load', () => {
+    // console.log("Scroll Handler");
 
-    const eventNameWrapperWidth = eventNameWrapper.offsetWidth;
-    const eventNameWidth = eventName.offsetWidth;
-    const eventNameMoveWidth = eventNameWrapperWidth - eventNameWidth;
+    document.querySelectorAll('.infinite-scroll__wrapper').forEach( (element) => {
+            
+        const scrollWrapper = element.parentElement;
+        const scrollingElement = element.children[0];
 
-    const speakerNameWrapperWidth = speakerNameWrapper.offsetWidth;
-    const speakerNameWidth = speakerName.offsetWidth;
-    const speakerNameMoveWidth = speakerNameWrapperWidth - speakerNameWidth;
-     
-    console.log("h2:" , eventNameWidth);
-    console.log("h2 wrapper:", eventNameWrapperWidth);
-    console.log("h2 move:", eventNameMoveWidth);
+        const scrollWrapperWidth = scrollWrapper.offsetWidth;
+        const scrollingElementWidth = scrollingElement.offsetWidth;
 
-    console.log("p:", speakerNameWidth);
-    console.log("p wrapper:", speakerNameWrapperWidth);
-    console.log("p move:", speakerNameMoveWidth);
+        const elementNetOffsetWidth = scrollWrapperWidth - scrollingElementWidth;
 
-    eventName.style.setProperty('--move-width', `${eventNameMoveWidth}px`);
-    eventName.style.setProperty('--move-duration', `${-(eventNameMoveWidth * 9) / 199}s`);
+        // console.log("p:" , scrollingElementWidth);
+        // console.log("p wrapper:", scrollWrapperWidth);
+        // console.log("p move:", elementNetOffsetWidth);
 
-    speakerName.style.setProperty('--move-width', `${speakerNameMoveWidth}px`);
-    speakerName.style.setProperty('--move-duration', `${-(speakerNameMoveWidth * 9) / 199}s`);
-});
+        scrollingElement.style.setProperty('--move-width', `${elementNetOffsetWidth}px`);
+        scrollingElement.style.setProperty('--move-duration', `${-(elementNetOffsetWidth * 9) / 199}s`);
+    });
+}
 
 // for(let index = 0; index >= moveWidth; index--) {
 
