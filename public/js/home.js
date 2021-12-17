@@ -97,90 +97,137 @@ window.noti = notificationHandler;
 
 // gallery
 
-const galleryWraper = document.querySelector('.gallery__wrapper');
-const galleryItems = document.querySelectorAll('.gallery__item');
-let pos = { top: 0, left: 0, x: 0, y: 0 };
+class galleryManager {
 
-const mouseMoveHandler = function (e) {
-    // How far the mouse has been moved
-    const dx = e.clientX - pos.x;
-    const dy = e.clientY - pos.y;
-
-    // Scroll the element
-    galleryWraper.scrollTop = pos.top - dy;
-    galleryWraper.scrollLeft = pos.left - dx;
-};
-
-const mouseUpHandler = function () {
-    document.removeEventListener('mousemove', mouseMoveHandler);
-    document.removeEventListener('mouseup', mouseUpHandler);
-
-    galleryWraper.style.cursor = 'grab';
-    galleryWraper.style.removeProperty('user-select');
-};
-
-const mouseDownHandler = (e) => {
-
-    //change cursor to grab and remove selecting
-    galleryWraper.style.cursor = "grabbing";
-    galleryWraper.style.userSelect = "none";
-
-    pos = {
-        //curr scroll pos of the wrapper
-        left: galleryWraper.scrollLeft,
-        top: galleryWraper.scrollTop,
-
-        //curr pos of the mouse 
-        x: e.clientX,
-        y: e.clientY
+    galleryWraper = null;
+    galleryItems = null;
+    galleryWrapperFlex = null;
+    
+    constructor() {
+        this.galleryWraper = document.querySelector('.gallery__wrapper');
+        this.galleryItems = document.querySelectorAll('.gallery__item');
+        this.galleryWrapperFlex = document.querySelector('.gallery__flex');
+        
+        this.initGalleryHandler();
     }
 
-    document.addEventListener('mousemove', mouseMoveHandler);
-    document.addEventListener('mouseup', mouseUpHandler);
-};
-
-galleryWraper.addEventListener('mousedown', mouseDownHandler);
-
-//update gallery
-(async function updateGallery() {
-
-    // console.log("Updating Gallery");
-
+    initGalleryHandler() {
     
+        this.updateGallery();
 
-})();
-//update gallery
+        window.addEventListener('load', () => {
 
-window.addEventListener('load', infiniteScrollHandler());
+            this.initScrollHandler(this.galleryWraper);
+            this.initInfiniteScrollHandler();
+        })
+    
+    }
 
-function infiniteScrollHandler() {
+    async updateGallery() {
 
-    // console.log("Scroll Handler");
-
-    document.querySelectorAll('.infinite-scroll__wrapper').forEach( (element) => {
+        // console.log("Updating Gallery");
+    
+        const events = await (await fetch(`https://raw.githubusercontent.com/hash-define-organization/website-update/main/database/events.json`)).json();
+        const fallbackImage = `https://raw.githubusercontent.com/hash-define-organization/website-update/main/database/gallery/images/define-logo-2.png`;
+    
+        events.forEach( (event) => {
+    
+            let eventTags = ``;
+    
+            event.event_type.forEach((tag) => {
+                eventTags += `<p>${tag}</p>`;
+            })
+    
+            const cardImage = event.poster_link || fallbackImage;
             
-        const scrollWrapper = element.parentElement;
-        const scrollingElement = element.children[0];
+            const eventCardHTML = `
+            <div class="gallery__item">
+                <img src="${cardImage}" />
+                <div class="gallery__item-content">
+                    <div class="event-name merge-sides infinite-scroll__wrapper">
+                        <p class="infinite-scroll">${event.event_name}</p>
+                    </div>
+                    <div class="speaker-name merge-sides infinite-scroll__wrapper">
+                        <p class="infinite-scroll">${event.event_guest}</p>
+                    </div>
+                    <div class="event-tag">
+                        ${eventTags}
+                    </div>
+                </div>
+            </div>
+            `;
+    
+            this.galleryWrapperFlex.innerHTML += eventCardHTML;
+    
+        });
+    
+    };
+    
+    initScrollHandler() {
 
-        const scrollWrapperWidth = scrollWrapper.offsetWidth;
-        const scrollingElementWidth = scrollingElement.offsetWidth;
-
-        const elementNetOffsetWidth = scrollWrapperWidth - scrollingElementWidth;
-
-        // console.log("p:" , scrollingElementWidth);
-        // console.log("p wrapper:", scrollWrapperWidth);
-        // console.log("p move:", elementNetOffsetWidth);
-
-        scrollingElement.style.setProperty('--move-width', `${elementNetOffsetWidth}px`);
-        scrollingElement.style.setProperty('--move-duration', `${-(elementNetOffsetWidth * 9) / 199}s`);
-    });
+        const galleryWraper = this.galleryWraper;
+        let pos = { top: 0, left: 0, x: 0, y: 0 };
+        
+        const mouseMoveHandler = function (e) {
+            // How far the mouse has been moved
+            const dx = e.clientX - pos.x;
+            const dy = e.clientY - pos.y;
+        
+            // Scroll the element
+            galleryWraper.scrollTop = pos.top - dy;
+            galleryWraper.scrollLeft = pos.left - dx;
+        };
+        
+        const mouseUpHandler = function () {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
+        
+            galleryWraper.style.cursor = 'grab';
+            galleryWraper.style.removeProperty('user-select');
+        };
+        
+        const mouseDownHandler = (e) => {
+        
+            //change cursor to grab and remove selecting
+            galleryWraper.style.cursor = "grabbing";
+            galleryWraper.style.userSelect = "none";
+        
+            pos = {
+                //curr scroll pos of the wrapper
+                left: galleryWraper.scrollLeft,
+                top: galleryWraper.scrollTop,
+        
+                //curr pos of the mouse 
+                x: e.clientX,
+                y: e.clientY
+            }
+        
+            document.addEventListener('mousemove', mouseMoveHandler);
+            document.addEventListener('mouseup', mouseUpHandler);
+        };
+        
+        galleryWraper.addEventListener('mousedown', mouseDownHandler);
+    }
+    
+    initInfiniteScrollHandler() {
+    
+        document.querySelectorAll('.infinite-scroll__wrapper').forEach( (element) => {
+                
+            const scrollWrapper = element.parentElement;
+            const scrollingElement = element.children[0];
+    
+            const scrollWrapperWidth = scrollWrapper.offsetWidth;
+            const scrollingElementWidth = scrollingElement.offsetWidth;
+    
+            const elementNetOffsetWidth = scrollWrapperWidth - scrollingElementWidth;
+    
+            scrollingElement.style.setProperty('--move-width', `${elementNetOffsetWidth}px`);
+            scrollingElement.style.setProperty('--move-duration', `${-(elementNetOffsetWidth * 9) / 199}s`);
+        });
+    }
 }
 
-// for(let index = 0; index >= moveWidth; index--) {
-
-//     eventName.style.transform = `translateX(${index}px)`;
-// }
-//moving text gallery-content
+const galleryHandler = new galleryManager();
 
 
 // gallery
