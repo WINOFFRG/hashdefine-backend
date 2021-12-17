@@ -102,24 +102,22 @@ class galleryManager {
     galleryWraper = null;
     galleryItems = null;
     galleryWrapperFlex = null;
+    infiniteScrollWrapper = null;
     
     constructor() {
         this.galleryWraper = document.querySelector('.gallery__wrapper');
         this.galleryItems = document.querySelectorAll('.gallery__item');
         this.galleryWrapperFlex = document.querySelector('.gallery__flex');
+        this.infiniteScrollWrapper = document.querySelectorAll('.infinite-scroll__wrapper')
         
         this.initGalleryHandler();
     }
-
-    initGalleryHandler() {
     
-        this.updateGallery();
+    async initGalleryHandler() {
 
-        window.addEventListener('load', () => {
-
-            this.initScrollHandler(this.galleryWraper);
-            this.initInfiniteScrollHandler();
-        })
+        await this.updateGallery();  
+        this.initScrollHandler();
+        this.initInfiniteScrollHandler();
     
     }
 
@@ -129,7 +127,9 @@ class galleryManager {
     
         const events = await (await fetch(`https://raw.githubusercontent.com/hash-define-organization/website-update/main/database/events.json`)).json();
         const fallbackImage = `https://raw.githubusercontent.com/hash-define-organization/website-update/main/database/gallery/images/define-logo-2.png`;
-    
+        
+        console.log(events);
+
         events.forEach( (event) => {
     
             let eventTags = ``;
@@ -213,7 +213,7 @@ class galleryManager {
     
         document.querySelectorAll('.infinite-scroll__wrapper').forEach( (element) => {
                 
-            const scrollWrapper = element.parentElement;
+            const scrollWrapper = element;
             const scrollingElement = element.children[0];
     
             const scrollWrapperWidth = scrollWrapper.offsetWidth;
