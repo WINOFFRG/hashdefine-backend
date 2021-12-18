@@ -281,3 +281,14 @@ function init() {
 
 
 console.log(new Date());
+
+
+const findCity2 = (checkCity) => {
+
+    cities.forEach( (city) => {
+
+        if(city === checkCity || city.toLowerCase().trim() === checkCity) {
+            console.log("Match Found!");
+        }
+    });
+}
