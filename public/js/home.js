@@ -137,8 +137,16 @@ class galleryManager {
             event.event_type.forEach((tag) => {
                 eventTags += `<p>${tag}</p>`;
             })
-    
-            const cardImage = event.poster_link || fallbackImage;
+            
+            let cardImage;
+
+            if(event.poster_link === "") {
+
+                cardImage = fallbackImage;
+            } else {
+                
+                cardImage = event.poster_link;
+            }
             
             const eventCardHTML = `
             <div class="gallery__item">
