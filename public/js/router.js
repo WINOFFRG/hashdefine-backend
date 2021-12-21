@@ -53,7 +53,7 @@ class Router {
             
             //Purify Path
             let viewPath = this.views[path] === undefined ? '/error' : path;
-            
+
             //Fetch Content if not present
             let viewContent = this.views[viewPath] === '' ? await this.getView(this.routes[viewPath].view) : this.views[viewPath];
             
