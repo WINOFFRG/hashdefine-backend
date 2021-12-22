@@ -75,7 +75,7 @@ class Router {
             '/': {
                 view: 'home',
                 title: `${this.globalTitle}`,
-                scripts: ['home'],
+                scripts: ['home', 'Gradient'],
             },
             '/events': {
                 view: 'events',
