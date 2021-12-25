@@ -155,8 +155,8 @@ class galleryManager {
                     <div class="event-name merge-sides infinite-scroll__wrapper">
                         <p class="infinite-scroll">${event.event_name}</p>
                     </div>
-                    <div class="speaker-name merge-sides infinite-scroll__wrapper">
-                        <p class="infinite-scroll">${event.event_guest}</p>
+                    <div class="speaker-name">
+                        <p>${event.event_guest}</p>
                     </div>
                     <div class="event-tag">
                         ${eventTags}
@@ -216,6 +216,10 @@ class galleryManager {
         
         galleryWraper.addEventListener('mousedown', mouseDownHandler);
     }
+
+    convertRemToPixels(rem) {    
+        return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
     
     initInfiniteScrollHandler() {
     
@@ -223,12 +227,28 @@ class galleryManager {
                 
             const scrollWrapper = element;
             const scrollingElement = element.children[0];
-    
-            const scrollWrapperWidth = scrollWrapper.offsetWidth;
-            const scrollingElementWidth = scrollingElement.offsetWidth;
-    
-            const elementNetOffsetWidth = scrollWrapperWidth - scrollingElementWidth;
-    
+            
+            const computedStyle = getComputedStyle(scrollingElement);
+            const paddingWidth = parseFloat(computedStyle.paddingLeft) + parseFloat(computedStyle.paddingRight);
+
+            const scrollWrapperWidth = scrollWrapper.clientWidth;
+            const scrollingElementWidth = scrollingElement.clientWidth;
+            
+            let elementNetOffsetWidth = scrollWrapperWidth - scrollingElementWidth;
+            
+            if(( elementNetOffsetWidth < 0 && -elementNetOffsetWidth < paddingWidth ) || elementNetOffsetWidth > 0) {
+                
+                elementNetOffsetWidth = 0;
+                scrollingElement.classList.add('no-move');
+            }
+            
+            console.log(scrollingElement);
+            console.log("scrollWrapperWidth: " + scrollWrapperWidth);
+            console.log("scrollingElementWidth: " + scrollingElementWidth);
+            console.log("elementNetOffsetWidth: " + elementNetOffsetWidth);
+            // console.log("paddingWidth: " + paddingWidth);
+
+
             scrollingElement.style.setProperty('--move-width', `${elementNetOffsetWidth}px`);
             scrollingElement.style.setProperty('--move-duration', `${-(elementNetOffsetWidth * 9) / 199}s`);
         });
