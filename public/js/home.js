@@ -92,11 +92,6 @@ class NotificationManager {
     }
 }
 
-const notificationHandler = new NotificationManager();
-window.noti = notificationHandler;
-
-// gallery
-
 class galleryManager {
 
     galleryWraper = null;
@@ -255,11 +250,6 @@ class galleryManager {
     }
 }
 
-const galleryHandler = new galleryManager();
-
-
-// gallery
-
 function emailHandler() {
 
     function validateEmail(email) {
@@ -301,22 +291,84 @@ function emailHandler() {
     }); 
 }
 
-function init() {
-    console.log("Home page loaded");
-};
+class typingEffect {
 
-// emailHandler();
+    constructor(properties) {
 
+        if(!properties.words || !properties.element) {
+            throw new Error("Must Enter required Values!");
+        }   
+     
+        this.typedTextElement = document.querySelector(properties.element);
+        this.textCursor = document.querySelector(properties.cursor);
+        this.typedWords = properties.words;
+        this.typingDelay = properties.tDelay || 200;
+        this.erasingDelay = properties.eDelay || 100;
+        this.newTextDelay = properties.ntDelay || 2000;
+    
+        this.textArrayIndex = 0;
+        this.charIndex = 0;
 
-console.log(new Date());
+        this.init();
+    }
 
-
-const findCity2 = (checkCity) => {
-
-    cities.forEach( (city) => {
-
-        if(city === checkCity || city.toLowerCase().trim() === checkCity) {
-            console.log("Match Found!");
+    init() {
+        // setTimeout(this.print, 5000);
+        // this.type();
+        if(this.typedWords.length) {
+            setTimeout(() => this.type(), this.newTextDelay + 250);
         }
-    });
+    }
+
+    print() {
+        console.log("Called timeout!!");
+    }
+
+    type() {
+        if(this.charIndex < this.typedWords[this.textArrayIndex].length) {
+            if(!this.textCursor.classList.contains("typing")) {
+                this.textCursor.classList.add("typing");
+            }
+            this.typedTextElement.textContent += this.typedWords[this.textArrayIndex].charAt(this.charIndex);
+            this.charIndex++;
+            setTimeout(() => this.type(), this.typingDelay);
+        }
+        else {
+            this.textCursor.classList.remove("typing");
+            setTimeout(() => this.erase(), this.newTextDelay);
+        }
+    }
+
+    erase() {
+        if(this.charIndex > 0) {
+            if(!this.textCursor.classList.contains("typing")) {
+                this.textCursor.classList.add("typing");
+            }
+            this.typedTextElement.textContent = this.typedWords[this.textArrayIndex].substring(0, this.charIndex - 1);
+            this.charIndex--;
+            setTimeout(() => this.erase(), this.erasingDelay);
+        }
+        else {
+            this.textCursor.classList.remove("typing");
+            this.textArrayIndex++;
+            if (this.textArrayIndex >= this.typedWords.length) {
+                this.textArrayIndex = 0;
+                // return;
+            }
+            setTimeout(() => this.type(), this.typingDelay + 1100);
+        }
+    }
 }
+
+const masterHeadline = {
+    words: ['Code', 'Learn', 'Grow'],
+    element: '.typed-text-1',
+    cursor: '.cursor-1',
+}
+
+// window.addEventListener('hashchange', () => {
+    // console.log("Execute!");
+    const notificationHandler = new NotificationManager();
+    const galleryHandler = new galleryManager();
+    const headlineTyping = new typingEffect(masterHeadline);
+// });

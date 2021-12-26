@@ -126,7 +126,8 @@ class Router {
             scriptElement.type = 'module';
             scriptElement.src = `/js/${script}.js`;
             scriptElement.setAttribute('data-script', script);
-            document.querySelector('body').appendChild(scriptElement);
+            scriptElement.setAttribute('defer', true);
+            document.querySelector('head').appendChild(scriptElement);
         });
     }
 
@@ -144,3 +145,9 @@ class Router {
 };
 
 const pageRouter = new Router();
+
+/*
+1. Make custom event which will be triggered on every route change
+2. On customEvent being fired call loadJS() function 
+3. LoadJS() function will load the JS file from the array of that view and append it to the DOM
+*/
