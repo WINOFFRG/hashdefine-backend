@@ -24,7 +24,10 @@ class Router {
     }
 
     setEvents() { 
-        window.addEventListener("popstate", this.render);
+        console.log(this);
+        window.addEventListener("popstate", () => {
+            this.render();
+        });
 
         document.addEventListener("DOMContentLoaded", () => {
             document.body.addEventListener("click", e => {
@@ -62,7 +65,7 @@ class Router {
             document.title = this.routes[viewPath].title;
             this.mountPoint.innerHTML = viewContent;
     
-            this.loadScripts(this.routes[viewPath].scripts);    
+            this.loadScripts(this.routes[viewPath].scripts);
 
         } catch (error) {
             console.log("An Error Occured while rendering the View!");
@@ -75,7 +78,7 @@ class Router {
             '/': {
                 view: 'home',
                 title: `${this.globalTitle}`,
-                scripts: ['home', 'Gradient'],
+                scripts: ['home'],
             },
             '/events': {
                 view: 'events',
@@ -99,7 +102,7 @@ class Router {
             }
         };
     }
-   
+
     setViews() {
         let views = {};
 
@@ -123,11 +126,13 @@ class Router {
             if(document.querySelector(`[data-script=${script}]`)) return;
 
             let scriptElement = document.createElement('script');
-            scriptElement.type = 'module';
+            // scriptElement.type = 'module';
             scriptElement.src = `/js/${script}.js`;
             scriptElement.setAttribute('data-script', script);
             scriptElement.setAttribute('defer', true);
             document.querySelector('head').appendChild(scriptElement);
+
+            // window.
         });
     }
 
@@ -145,6 +150,7 @@ class Router {
 };
 
 const pageRouter = new Router();
+window.router = pageRouter;
 
 /*
 1. Make custom event which will be triggered on every route change

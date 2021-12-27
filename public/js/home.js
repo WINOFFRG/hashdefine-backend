@@ -1,3 +1,4 @@
+( function() {
 const dbBaseUrl = 'https://raw.githubusercontent.com/hash-define-organization/website-update/main/database';
 const notificationsUrl = '/notifications.json';
 const eventsUrl = '/gallery/gallery.json';
@@ -123,8 +124,7 @@ class galleryManager {
         const events = await (await fetch(`https://raw.githubusercontent.com/hash-define-organization/website-update/main/database/events.json`)).json();
         const fallbackImage = `https://raw.githubusercontent.com/hash-define-organization/website-update/main/database/gallery/images/define-logo-2.png`;
         
-        console.log(events);
-
+        // console.log(events);
         events.forEach( (event) => {
     
             let eventTags = ``;
@@ -237,10 +237,10 @@ class galleryManager {
                 scrollingElement.classList.add('no-move');
             }
             
-            console.log(scrollingElement);
-            console.log("scrollWrapperWidth: " + scrollWrapperWidth);
-            console.log("scrollingElementWidth: " + scrollingElementWidth);
-            console.log("elementNetOffsetWidth: " + elementNetOffsetWidth);
+            // console.log(scrollingElement);
+            // console.log("scrollWrapperWidth: " + scrollWrapperWidth);
+            // console.log("scrollingElementWidth: " + scrollingElementWidth);
+            // console.log("elementNetOffsetWidth: " + elementNetOffsetWidth);
             // console.log("paddingWidth: " + paddingWidth);
 
 
@@ -366,9 +366,7 @@ const masterHeadline = {
     cursor: '.cursor-1',
 }
 
-// window.addEventListener('hashchange', () => {
-    // console.log("Execute!");
     const notificationHandler = new NotificationManager();
     const galleryHandler = new galleryManager();
     const headlineTyping = new typingEffect(masterHeadline);
-// });
+})();
