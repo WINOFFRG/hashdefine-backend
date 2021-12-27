@@ -80,6 +80,13 @@ class Router {
                 title: `${this.globalTitle}`,
                 scripts: ['home'],
             },
+
+            // '/': {
+            //     view: 'events-mobile',
+            //     title: `${this.globalTitle}`,
+            //     scripts: [],
+            // },
+            
             '/events': {
                 view: 'events',
                 title: `${this.globalTitle} - Events`,
