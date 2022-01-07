@@ -360,12 +360,37 @@ class typingEffect {
     }
 }
 
+function generateGradient() {
+
+    try {
+        if(!Gradient) {
+            console.log("Gradient is not defined!");
+        }
+    
+        let gradient = new Gradient();
+        gradient.initGradient('#gradient-canvas');
+    
+    } catch (error) {
+
+        const script = document.createElement('script');
+        script.src = "/js/homeGradient.js";
+        script.type = "text/javascript";
+        document.head.appendChild(script);
+        
+        script.onload = () => {
+            let gradient = new Gradient();
+            gradient.initGradient('#gradient-canvas');
+        }
+    }
+}
+
 const masterHeadline = {
     words: ['Code', 'Learn', 'Grow'],
     element: '.typed-text-1',
     cursor: '.cursor-1',
 }
 
+    generateGradient();
     const notificationHandler = new NotificationManager();
     const galleryHandler = new galleryManager();
     const headlineTyping = new typingEffect(masterHeadline);

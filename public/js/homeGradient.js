@@ -500,10 +500,6 @@ function normalizeColor(hexCode) {
   }
   
   
-console.log("Generating Gradient Canvas!");
-let gradient = new Gradient();
-gradient.initGradient('#gradient-canvas');
-  
   /*
   *Finally initializing the Gradient class, assigning a canvas to it and calling Gradient.connect() which initializes everything,
   * Use Gradient.pause() and Gradient.play() for controls.
